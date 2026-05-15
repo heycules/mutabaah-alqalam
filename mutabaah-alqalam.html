@@ -1,0 +1,904 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Mutaba'ah Yaumiyah — Al Qalam Jakarta</title>
+<link href="https://fonts.googleapis.com/css2?family=Amiri:wght@400;700&family=Plus+Jakarta+Sans:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --hijau: #1D9E75;
+    --hijau-terang: #26C48F;
+    --hijau-gelap: #0F6E56;
+    --hijau-dim: rgba(29,158,117,0.15);
+    --hijau-border: rgba(29,158,117,0.35);
+    --teks: #ffffff;
+    --teks-sekunder: rgba(255,255,255,0.55);
+    --teks-muted: rgba(255,255,255,0.35);
+    --batas: rgba(255,255,255,0.1);
+    --batas-terang: rgba(255,255,255,0.18);
+    --bg: #0a0a0a;
+    --bg-card: #111111;
+    --bg-elevated: #1a1a1a;
+    --bg-input: #1e1e1e;
+    --radius: 14px;
+    --radius-sm: 9px;
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body {
+    font-family: 'Plus Jakarta Sans', sans-serif;
+    background: var(--bg);
+    color: var(--teks);
+    min-height: 100vh;
+  }
+
+  /* HEADER */
+  .header {
+    background: linear-gradient(160deg, #0d2a1f 0%, #0a1a13 60%, #080808 100%);
+    padding: 28px 20px 68px;
+    text-align: center;
+    position: relative;
+    overflow: hidden;
+    border-bottom: 1px solid rgba(29,158,117,0.2);
+  }
+  .header::before {
+    content: '';
+    position: absolute;
+    top: -60px; right: -60px;
+    width: 240px; height: 240px;
+    border-radius: 50%;
+    background: radial-gradient(circle, rgba(29,158,117,0.12) 0%, transparent 70%);
+  }
+  .header::after {
+    content: '';
+    position: absolute;
+    bottom: -80px; left: -40px;
+    width: 200px; height: 200px;
+    border-radius: 50%;
+    background: radial-gradient(circle, rgba(29,158,117,0.08) 0%, transparent 70%);
+  }
+  .header-logo {
+    font-family: 'Amiri', serif;
+    font-size: 30px;
+    color: #fff;
+    margin-bottom: 6px;
+    letter-spacing: 0.03em;
+    text-shadow: 0 0 40px rgba(29,158,117,0.4);
+  }
+  .header-sub {
+    font-size: 11px;
+    color: rgba(255,255,255,0.45);
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    margin-bottom: 18px;
+  }
+  .header-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    background: rgba(29,158,117,0.15);
+    border: 1px solid rgba(29,158,117,0.4);
+    border-radius: 999px;
+    padding: 5px 16px;
+    font-size: 12px;
+    color: #1D9E75;
+    font-weight: 500;
+  }
+  .header-badge::before { content: '🌙'; font-size: 13px; }
+
+  /* CARD UTAMA */
+  .card-container {
+    max-width: 480px;
+    margin: -36px auto 0;
+    padding: 0 16px 40px;
+  }
+  .card {
+    background: var(--bg-card);
+    border-radius: var(--radius);
+    border: 1px solid var(--batas);
+    overflow: hidden;
+  }
+
+  /* STEP INDICATOR */
+  .steps-bar {
+    display: flex;
+    background: #0d1f18;
+    border-bottom: 1px solid rgba(29,158,117,0.2);
+    padding: 14px 20px;
+    gap: 8px;
+    align-items: center;
+  }
+  .step-dot {
+    width: 8px; height: 8px;
+    border-radius: 50%;
+    background: rgba(29,158,117,0.2);
+    transition: all 0.3s;
+  }
+  .step-dot.active { background: var(--hijau); width: 24px; border-radius: 999px; box-shadow: 0 0 8px rgba(29,158,117,0.5); }
+  .step-dot.done { background: var(--hijau-gelap); }
+  .step-label {
+    margin-left: auto;
+    font-size: 12px;
+    color: var(--hijau);
+    font-weight: 500;
+  }
+
+  /* SECTIONS */
+  .section { display: none; padding: 24px 20px; }
+  .section.active { display: block; }
+  .section-title {
+    font-size: 17px;
+    font-weight: 600;
+    color: var(--teks);
+    margin-bottom: 4px;
+  }
+  .section-hint {
+    font-size: 13px;
+    color: var(--teks-sekunder);
+    margin-bottom: 20px;
+    line-height: 1.5;
+  }
+
+  /* GENDER TAB */
+  .gender-tabs {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 8px;
+    margin-bottom: 20px;
+  }
+  .gender-tab {
+    padding: 12px;
+    border: 1px solid var(--batas);
+    border-radius: var(--radius-sm);
+    text-align: center;
+    cursor: pointer;
+    transition: all 0.2s;
+    background: var(--bg-elevated);
+  }
+  .gender-tab.active {
+    border-color: var(--hijau-border);
+    background: var(--hijau-dim);
+    box-shadow: inset 0 0 0 1px rgba(29,158,117,0.2);
+  }
+  .gender-tab .icon { font-size: 22px; margin-bottom: 4px; }
+  .gender-tab .label { font-size: 13px; font-weight: 600; color: var(--teks-sekunder); }
+  .gender-tab .count { font-size: 11px; color: var(--teks-muted); margin-top: 2px; }
+  .gender-tab.active .label { color: var(--hijau-terang); }
+  .gender-tab.active .count { color: var(--hijau); }
+
+  /* SANTRI LIST */
+  .santri-search {
+    width: 100%;
+    padding: 10px 14px;
+    border: 1px solid var(--batas);
+    border-radius: var(--radius-sm);
+    font-size: 14px;
+    font-family: 'Plus Jakarta Sans', sans-serif;
+    margin-bottom: 12px;
+    background: var(--bg-input);
+    color: var(--teks);
+  }
+  .santri-search::placeholder { color: var(--teks-muted); }
+  .santri-search:focus { outline: none; border-color: var(--hijau-border); }
+  .santri-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 8px;
+    max-height: 280px;
+    overflow-y: auto;
+    margin-bottom: 16px;
+    scrollbar-width: thin;
+    scrollbar-color: var(--batas) transparent;
+  }
+  .santri-item {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 10px 12px;
+    border: 1px solid var(--batas);
+    border-radius: var(--radius-sm);
+    cursor: pointer;
+    transition: all 0.2s;
+    background: var(--bg-elevated);
+  }
+  .santri-item:hover { border-color: var(--batas-terang); background: #222; }
+  .santri-item.selected {
+    border-color: var(--hijau-border);
+    background: var(--hijau-dim);
+  }
+  .santri-avatar {
+    width: 32px; height: 32px;
+    border-radius: 50%;
+    background: #1a3328;
+    color: var(--hijau);
+    font-size: 12px;
+    font-weight: 600;
+    display: flex; align-items: center; justify-content: center;
+    flex-shrink: 0;
+    border: 1px solid rgba(29,158,117,0.3);
+  }
+  .santri-item.selected .santri-avatar { background: var(--hijau); color: white; border-color: var(--hijau); }
+  .santri-nama { font-size: 13px; font-weight: 500; color: var(--teks); line-height: 1.3; }
+  .santri-kelas { font-size: 11px; color: var(--teks-muted); }
+  .santri-item.selected .santri-nama { color: var(--hijau-terang); }
+  .santri-item.selected .santri-kelas { color: var(--hijau); }
+
+  /* FORM FIELDS */
+  .field { margin-bottom: 16px; }
+  .field label { display: block; font-size: 13px; font-weight: 500; color: var(--teks-sekunder); margin-bottom: 6px; }
+  .field select {
+    width: 100%; padding: 10px 14px;
+    border: 1px solid var(--batas);
+    border-radius: var(--radius-sm);
+    font-size: 14px;
+    font-family: 'Plus Jakarta Sans', sans-serif;
+    background: var(--bg-input);
+    color: var(--teks);
+    appearance: none;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 24 24' fill='none' stroke='rgba(255,255,255,0.4)' stroke-width='2'%3E%3Cpath d='M6 9l6 6 6-6'/%3E%3C/svg%3E");
+    background-repeat: no-repeat;
+    background-position: right 12px center;
+  }
+  .field select:focus { outline: none; border-color: var(--hijau-border); }
+  .field select option { background: #1e1e1e; color: white; }
+  .field-row { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+
+  /* KEGIATAN */
+  .hari-nav {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    background: var(--bg-elevated);
+    border: 1px solid var(--batas);
+    border-radius: var(--radius-sm);
+    padding: 10px 14px;
+    margin-bottom: 16px;
+  }
+  .hari-nav button {
+    width: 32px; height: 32px;
+    border-radius: 50%;
+    border: 1px solid var(--batas);
+    background: var(--bg-input);
+    cursor: pointer;
+    font-size: 16px;
+    display: flex; align-items: center; justify-content: center;
+    transition: all 0.15s;
+    color: var(--teks-sekunder);
+  }
+  .hari-nav button:hover:not(:disabled) { background: var(--hijau-dim); border-color: var(--hijau-border); color: var(--hijau-terang); }
+  .hari-nav button:disabled { opacity: 0.25; cursor: not-allowed; }
+  .hari-info { text-align: center; }
+  .hari-info .hari-label { font-size: 16px; font-weight: 600; color: var(--teks); }
+  .hari-info .hari-sub { font-size: 12px; color: var(--teks-muted); }
+
+  .progress-wrap { margin-bottom: 16px; }
+  .progress-top { display: flex; justify-content: space-between; font-size: 12px; color: var(--teks-sekunder); margin-bottom: 6px; }
+  .progress-bar { height: 4px; background: var(--batas); border-radius: 999px; overflow: hidden; }
+  .progress-fill { height: 100%; background: var(--hijau); border-radius: 999px; transition: width 0.4s; box-shadow: 0 0 8px rgba(29,158,117,0.5); }
+
+  .grup-label {
+    font-size: 10px;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    color: var(--hijau);
+    padding: 12px 0 6px;
+    border-bottom: 1px solid rgba(29,158,117,0.2);
+    margin-bottom: 4px;
+  }
+  .kegiatan-list { margin-bottom: 8px; }
+  .kegiatan-row {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 9px 0;
+    border-bottom: 1px solid rgba(255,255,255,0.05);
+    cursor: pointer;
+    transition: all 0.15s;
+    border-radius: 4px;
+  }
+  .kegiatan-row:last-child { border-bottom: none; }
+  .kegiatan-row:active { background: rgba(255,255,255,0.03); }
+  .check-box {
+    width: 22px; height: 22px;
+    border-radius: 6px;
+    border: 1.5px solid var(--batas-terang);
+    background: var(--bg-input);
+    display: flex; align-items: center; justify-content: center;
+    flex-shrink: 0;
+    transition: all 0.15s;
+  }
+  .kegiatan-row.checked .check-box {
+    background: var(--hijau);
+    border-color: var(--hijau);
+    box-shadow: 0 0 8px rgba(29,158,117,0.4);
+  }
+  .kegiatan-row.checked .check-box::after { content: '✓'; font-weight: 700; color: white; font-size: 12px; }
+  .kegiatan-nama { font-size: 14px; color: rgba(255,255,255,0.75); flex: 1; line-height: 1.4; }
+  .kegiatan-row.checked .kegiatan-nama { color: var(--hijau-terang); }
+
+  /* QUICK-NAV HARI */
+  .day-pills {
+    display: flex;
+    gap: 5px;
+    overflow-x: auto;
+    padding-bottom: 4px;
+    margin-bottom: 16px;
+    scrollbar-width: none;
+  }
+  .day-pills::-webkit-scrollbar { display: none; }
+  .day-pill {
+    flex-shrink: 0;
+    width: 30px; height: 30px;
+    border-radius: 50%;
+    border: 1px solid var(--batas);
+    font-size: 11px;
+    font-weight: 500;
+    display: flex; align-items: center; justify-content: center;
+    cursor: pointer;
+    transition: all 0.15s;
+    color: var(--teks-muted);
+    background: var(--bg-elevated);
+  }
+  .day-pill.active { background: var(--hijau); border-color: var(--hijau); color: white; box-shadow: 0 0 10px rgba(29,158,117,0.5); }
+  .day-pill.has-data { border-color: var(--hijau-border); color: var(--hijau); background: var(--hijau-dim); }
+  .day-pill.active.has-data { background: var(--hijau); color: white; }
+
+  /* INFO SANTRI STRIP */
+  .santri-strip {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    background: var(--hijau-dim);
+    border: 1px solid var(--hijau-border);
+    padding: 12px 16px;
+    margin-bottom: 16px;
+    border-radius: var(--radius-sm);
+  }
+  .strip-avatar {
+    width: 38px; height: 38px;
+    border-radius: 50%;
+    background: var(--hijau);
+    color: white;
+    font-size: 13px; font-weight: 600;
+    display: flex; align-items: center; justify-content: center;
+    flex-shrink: 0;
+    box-shadow: 0 0 12px rgba(29,158,117,0.4);
+  }
+  .strip-nama { font-size: 14px; font-weight: 600; color: var(--hijau-terang); }
+  .strip-detail { font-size: 12px; color: var(--hijau); margin-top: 1px; }
+
+  /* TOMBOL */
+  .btn {
+    width: 100%;
+    padding: 13px;
+    border-radius: var(--radius-sm);
+    font-size: 14px;
+    font-weight: 600;
+    font-family: 'Plus Jakarta Sans', sans-serif;
+    cursor: pointer;
+    transition: all 0.2s;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    border: none;
+  }
+  .btn-primary { background: var(--hijau); color: white; box-shadow: 0 4px 20px rgba(29,158,117,0.3); }
+  .btn-primary:hover { background: var(--hijau-terang); box-shadow: 0 4px 24px rgba(29,158,117,0.5); }
+  .btn-primary:active { transform: scale(0.98); }
+  .btn-primary:disabled { background: #333; color: #666; cursor: not-allowed; box-shadow: none; }
+  .btn-outline {
+    background: transparent;
+    border: 1px solid var(--batas-terang);
+    color: var(--teks-sekunder);
+    margin-bottom: 10px;
+  }
+  .btn-outline:hover { border-color: rgba(255,255,255,0.3); color: var(--teks); }
+
+  .btn-wrap { padding-top: 16px; border-top: 1px solid var(--batas); margin-top: 16px; }
+
+  /* LOADING */
+  .loading-overlay {
+    display: none;
+    position: fixed;
+    inset: 0;
+    background: rgba(0,0,0,0.75);
+    z-index: 999;
+    align-items: center;
+    justify-content: center;
+  }
+  .loading-overlay.show { display: flex; }
+  .loading-box {
+    background: var(--bg-card);
+    border: 1px solid var(--batas);
+    border-radius: var(--radius);
+    padding: 28px 36px;
+    text-align: center;
+  }
+  .spinner {
+    width: 40px; height: 40px;
+    border: 3px solid var(--batas);
+    border-top-color: var(--hijau);
+    border-radius: 50%;
+    animation: spin 0.8s linear infinite;
+    margin: 0 auto 12px;
+  }
+  @keyframes spin { to { transform: rotate(360deg); } }
+  .loading-txt { font-size: 14px; color: var(--teks-sekunder); }
+
+  /* SUKSES */
+  .sukses-box { text-align: center; padding: 10px 0 20px; }
+  .sukses-icon {
+    width: 64px; height: 64px;
+    background: var(--hijau-dim);
+    border: 1px solid var(--hijau-border);
+    border-radius: 50%;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 30px;
+    margin: 0 auto 16px;
+    box-shadow: 0 0 24px rgba(29,158,117,0.3);
+  }
+  .sukses-judul { font-size: 20px; font-weight: 700; color: var(--teks); margin-bottom: 6px; }
+  .sukses-sub { font-size: 14px; color: var(--teks-sekunder); line-height: 1.6; margin-bottom: 20px; }
+  .rekap-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 8px;
+    margin-bottom: 24px;
+  }
+  .rekap-card {
+    background: var(--bg-elevated);
+    border: 1px solid var(--batas);
+    border-radius: var(--radius-sm);
+    padding: 12px;
+    text-align: left;
+  }
+  .rekap-label { font-size: 11px; color: var(--teks-muted); margin-bottom: 4px; }
+  .rekap-val { font-size: 20px; font-weight: 700; color: var(--hijau-terang); }
+
+  .toast {
+    position: fixed;
+    bottom: 24px; left: 50%;
+    transform: translateX(-50%) translateY(80px);
+    background: #1a1a1a;
+    border: 1px solid var(--batas-terang);
+    color: white;
+    padding: 10px 20px;
+    border-radius: 999px;
+    font-size: 13px;
+    font-weight: 500;
+    z-index: 1000;
+    transition: transform 0.3s;
+    white-space: nowrap;
+  }
+  .toast.show { transform: translateX(-50%) translateY(0); }
+
+  @media (max-width: 360px) {
+    .gender-tabs { grid-template-columns: 1fr 1fr; }
+    .santri-grid { grid-template-columns: 1fr; }
+  }
+</style>
+</head>
+<body>
+
+<div class="header">
+  <div class="header-logo">مُتَابَعَة يَوْمِيَّة</div>
+  <div class="header-sub">Pondok Pesantren Al Qalam Jakarta</div>
+  <div class="header-badge">Input Harian Santri</div>
+</div>
+
+<div class="card-container">
+  <div class="card">
+
+    <!-- STEP BAR -->
+    <div class="steps-bar">
+      <div class="step-dot active" id="dot1"></div>
+      <div class="step-dot" id="dot2"></div>
+      <div class="step-dot" id="dot3"></div>
+      <div class="step-label" id="stepLabel">Pilih Santri</div>
+    </div>
+
+    <!-- STEP 1: PILIH SANTRI & PERIODE -->
+    <div class="section active" id="sec1">
+      <div class="section-title">Pilih Santri</div>
+      <div class="section-hint">Pilih kelompok dan nama santri yang akan diisi mutaba'ahnya.</div>
+
+      <div class="gender-tabs">
+        <div class="gender-tab active" id="tabIkhwan" onclick="pilihGender('ikhwan')">
+          <div class="icon">🧑</div>
+          <div class="label">Ikhwan</div>
+          <div class="count">16 santri</div>
+        </div>
+        <div class="gender-tab" id="tabAkhwat" onclick="pilihGender('akhwat')">
+          <div class="icon">👩</div>
+          <div class="label">Akhwat</div>
+          <div class="count">29 santri</div>
+        </div>
+      </div>
+
+      <input type="text" class="santri-search" placeholder="🔍  Cari nama santri..." oninput="cariSantri(this.value)" id="searchInput">
+
+      <div class="santri-grid" id="santriGrid"></div>
+
+      <div class="field-row">
+        <div class="field">
+          <label>Bulan</label>
+          <select id="selBulan">
+            <option value="">Pilih...</option>
+            <option>Januari</option><option>Februari</option><option>Maret</option>
+            <option>April</option><option>Mei</option><option>Juni</option>
+            <option>Juli</option><option>Agustus</option><option>September</option>
+            <option>Oktober</option><option>November</option><option>Desember</option>
+          </select>
+        </div>
+        <div class="field">
+          <label>Tahun</label>
+          <select id="selTahun">
+            <option>2025</option>
+            <option selected>2026</option>
+            <option>2027</option>
+          </select>
+        </div>
+      </div>
+
+      <button class="btn btn-primary" onclick="keStep2()">Lanjut isi kegiatan →</button>
+    </div>
+
+    <!-- STEP 2: ISI KEGIATAN -->
+    <div class="section" id="sec2">
+      <div class="santri-strip" id="santriStrip">
+        <div class="strip-avatar" id="stripAvatar">RA</div>
+        <div>
+          <div class="strip-nama" id="stripNama">—</div>
+          <div class="strip-detail" id="stripDetail">—</div>
+        </div>
+      </div>
+
+      <div class="progress-wrap">
+        <div class="progress-top">
+          <span id="progTeks">0 dari 31 hari diisi</span>
+          <span id="progPersen">0%</span>
+        </div>
+        <div class="progress-bar"><div class="progress-fill" id="progFill" style="width:0%"></div></div>
+      </div>
+
+      <div class="day-pills" id="dayPills"></div>
+
+      <div class="hari-nav">
+        <button onclick="pindahHari(-1)" id="btnPrev">‹</button>
+        <div class="hari-info">
+          <div class="hari-label" id="hariLabel">Hari ke-1</div>
+          <div class="hari-sub" id="hariSub">dari 31 hari</div>
+        </div>
+        <button onclick="pindahHari(1)" id="btnNext">›</button>
+      </div>
+
+      <div id="kegiatanList"></div>
+
+      <div class="btn-wrap">
+        <button class="btn btn-outline" onclick="keStep1()">← Kembali</button>
+        <button class="btn btn-primary" onclick="kirimData()">✓ Selesai & Simpan ke Spreadsheet</button>
+      </div>
+    </div>
+
+    <!-- STEP 3: SUKSES -->
+    <div class="section" id="sec3">
+      <div class="sukses-box">
+        <div class="sukses-icon">✅</div>
+        <div class="sukses-judul">Data Tersimpan!</div>
+        <div class="sukses-sub" id="suksesSub">Mutaba'ah berhasil dikirim ke Google Sheets.</div>
+
+        <div class="rekap-grid">
+          <div class="rekap-card">
+            <div class="rekap-label">Total kegiatan tercatat</div>
+            <div class="rekap-val" id="rekapTotal">0</div>
+          </div>
+          <div class="rekap-card">
+            <div class="rekap-label">Hari yang diisi</div>
+            <div class="rekap-val" id="rekapHari">0</div>
+          </div>
+          <div class="rekap-card">
+            <div class="rekap-label">Kegiatan terbaik</div>
+            <div class="rekap-val" style="font-size:13px;padding-top:4px;" id="rekapTerbaik">—</div>
+          </div>
+          <div class="rekap-card">
+            <div class="rekap-label">Perlu ditingkatkan</div>
+            <div class="rekap-val" style="font-size:13px;padding-top:4px;" id="rekapPerlu">—</div>
+          </div>
+        </div>
+
+        <button class="btn btn-primary" onclick="reset()">+ Input Santri Lain</button>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<!-- LOADING -->
+<div class="loading-overlay" id="loadingOverlay">
+  <div class="loading-box">
+    <div class="spinner"></div>
+    <div class="loading-txt">Menyimpan ke Google Sheets...</div>
+  </div>
+</div>
+
+<div class="toast" id="toast"></div>
+
+<script>
+const API_URL = 'https://script.google.com/macros/s/AKfycbyb94pox_S5h_R3Orw-fz6VNtDzm9OdvJTeJVJl5sdIhhUEPQea8_qCDxQTj9qAv5Thew/exec';
+
+const IKHWAN = [
+  {nama:'Algifaris Hidayat',kelas:'7'},{nama:'Muhammad Fauzan',kelas:'7'},
+  {nama:'Fauzan Azhima Tovanda',kelas:'8'},{nama:'Muhammad Azam',kelas:'8'},
+  {nama:'Abd. Khoirul Azzam',kelas:'9'},{nama:'Ardian Akbar Maulana',kelas:'9'},
+  {nama:'Fais Assyauqani',kelas:'9'},{nama:'Hasan Nurdin',kelas:'9'},
+  {nama:'Muhammad Asyraf',kelas:'9'},{nama:'Muhammad Rasya Hasan',kelas:'9'},
+  {nama:'Ahmad Yani',kelas:'11'},{nama:'Aufa Nabil Anugrah',kelas:'11'},
+  {nama:'Rahmatun Syahna',kelas:'11'},{nama:'Syah Ramadhan',kelas:'11'},
+  {nama:'Muhammad Raffy Adikusuma',kelas:'12'},{nama:'Muhammad Ricky Chandra',kelas:'12'}
+];
+const AKHWAT = [
+  {nama:'Fathyhah Rizkia Rahmadani',kelas:'7'},{nama:'Syahrazad Ulil Albab',kelas:'7'},
+  {nama:'Aisyah Ramadhani',kelas:'8'},{nama:'Ayudya Badana\'ima',kelas:'8'},
+  {nama:'Noora Alheea Arizkeyra',kelas:'8'},{nama:'Nur Hasnah',kelas:'8'},
+  {nama:'Afifah Nur Rohana',kelas:'9'},{nama:'Fatimah Azzahra',kelas:'9'},
+  {nama:'Iis Nurlaylah',kelas:'9'},{nama:'Naura Artya Nathania',kelas:'9'},
+  {nama:'Raeesa Rabbanie Raya',kelas:'9'},
+  {nama:'Elsa Helwatunisah',kelas:'10'},{nama:'Fitratun Syahna',kelas:'10'},
+  {nama:'Indriya Padma Dewi',kelas:'10'},{nama:'Izzatul Kamalia',kelas:'10'},
+  {nama:"Muna 'Azmah",kelas:'10'},{nama:'Najwa Hayat Aulia',kelas:'10'},
+  {nama:'Aisyah Diva Muslimah',kelas:'11'},{nama:'Avrilia',kelas:'11'},
+  {nama:"Nida'an Khofiyya",kelas:'11'},{nama:'Nining Elisa',kelas:'11'},
+  {nama:'Nunung Elisa',kelas:'11'},{nama:'Nurul Fadhillah Aulia',kelas:'11'},
+  {nama:'Shavira Naura Azkya',kelas:'11'},{nama:'Wafda Shahwah Al Islami',kelas:'11'},
+  {nama:'Zahrotu Zita',kelas:'11'},
+  {nama:'Aquilla Zulfa Yourien',kelas:'12'},{nama:'Nuri Nur Laela',kelas:'12'},
+  {nama:'Sabrina Khayla Faqih Sutardi',kelas:'12'}
+];
+
+const KEGIATAN_GRUP = [
+  { grup: 'Shalat Fardu Jamaah', items: ['Fardu Jamaah - Subuh','Fardu Jamaah - Zuhur','Fardu Jamaah - Asar','Fardu Jamaah - Magrib','Fardu Jamaah - Isya'] },
+  { grup: 'Shalat Sunnah', items: ['Salat Sunnah - Qobliyah Subuh','Salat Sunnah - Qobliyah Zuhur',"Salat Sunnah - Ba'diyah Zuhur","Salat Sunnah - Ba'diyah Magrib","Salat Sunnah - Ba'diyah Isya",'Salat Sunnah - Qiyamullail','Salat Sunnah - Dhuha'] },
+  { grup: "Al-Qur'an & Ibadah", items: ['Shaum Sunnah',"Halaqah Al-Qur'an Pagi","Halaqah Al-Qur'an Sore","Halaqah Al-Qur'an Malam","Setoran Al-Qur'an","Muraja'ah","Tilawah Al-Qur'an",'Dzikir Pagi','Dzikir Petang'] },
+  { grup: 'Akhlak & Kegiatan', items: ['Piket Pagi','Piket Malam','Kultum','Belajar Mandiri','Membaca Buku Ilmiah','Infaq/Sodaqoh','Berpakaian Sopan & Sesuai Aturan','Tidak Berkata Kasar','Komitmen Berbicara Bahasa Arab','Berinisiatif dalam Kebaikan'] }
+];
+const SEMUA_KEGIATAN = KEGIATAN_GRUP.flatMap(g => g.items);
+const NAMA_PENDEK = k => k.includes(' - ') ? k.split(' - ')[1] : k;
+
+let gender = 'ikhwan';
+let selectedSantri = null;
+let hariAktif = 1;
+let totalHari = 31;
+let dataIsi = {};
+
+function initData() {
+  dataIsi = {};
+  SEMUA_KEGIATAN.forEach(k => {
+    dataIsi[k] = {};
+    for (let d = 1; d <= 31; d++) dataIsi[k][d] = false;
+  });
+}
+
+function getDaysInMonth(bulan, tahun) {
+  const m = {Januari:31,Februari:tahun%4===0?29:28,Maret:31,April:30,Mei:31,Juni:30,Juli:31,Agustus:31,September:30,Oktober:31,November:30,Desember:31};
+  return m[bulan] || 30;
+}
+
+function pilihGender(g) {
+  gender = g;
+  selectedSantri = null;
+  document.getElementById('tabIkhwan').className = 'gender-tab' + (g==='ikhwan'?' active':'');
+  document.getElementById('tabAkhwat').className = 'gender-tab' + (g==='akhwat'?' active':'');
+  document.getElementById('searchInput').value = '';
+  renderSantri('');
+}
+
+let filteredList = [];
+
+function renderSantri(q) {
+  filteredList = (gender==='ikhwan' ? IKHWAN : AKHWAT)
+    .filter(s => s.nama.toLowerCase().includes(q.toLowerCase()));
+  const grid = document.getElementById('santriGrid');
+  grid.innerHTML = filteredList.map((s, i) => {
+    const inisial = s.nama.split(' ').map(w=>w[0]).slice(0,2).join('');
+    const terpilih = selectedSantri && selectedSantri.nama === s.nama;
+    return `<div class="santri-item${terpilih?' selected':''}" onclick="pilihSantriIdx(${i})">
+      <div class="santri-avatar">${inisial}</div>
+      <div>
+        <div class="santri-nama">${s.nama}</div>
+        <div class="santri-kelas">Kelas ${s.kelas}</div>
+      </div>
+    </div>`;
+  }).join('');
+}
+
+function pilihSantriIdx(idx) {
+  const s = filteredList[idx];
+  if (!s) return;
+  selectedSantri = s;
+  renderSantri(document.getElementById('searchInput').value);
+}
+
+function cariSantri(q) { renderSantri(q); }
+
+
+function tampilToast(msg) {
+  const t = document.getElementById('toast');
+  t.textContent = msg;
+  t.classList.add('show');
+  setTimeout(() => t.classList.remove('show'), 2800);
+}
+
+function keStep2() {
+  if (!selectedSantri) { tampilToast('Pilih nama santri terlebih dahulu.'); return; }
+  const bulan = document.getElementById('selBulan').value;
+  if (!bulan) { tampilToast('Pilih bulan terlebih dahulu.'); return; }
+  const tahun = parseInt(document.getElementById('selTahun').value);
+  totalHari = getDaysInMonth(bulan, tahun);
+  hariAktif = 1;
+  initData();
+
+  const inisial = selectedSantri.nama.split(' ').map(w=>w[0]).slice(0,2).join('');
+  document.getElementById('stripAvatar').textContent = inisial;
+  document.getElementById('stripNama').textContent = selectedSantri.nama;
+  document.getElementById('stripDetail').textContent = `Kelas ${selectedSantri.kelas} · ${bulan} ${tahun}`;
+
+  updateDots(2); setStepLabel('Isi Kegiatan');
+  showSec('sec2');
+  renderDayPills();
+  renderKegiatan();
+  updateProgress();
+}
+
+function keStep1() {
+  updateDots(1); setStepLabel('Pilih Santri');
+  showSec('sec1');
+}
+
+function showSec(id) {
+  document.querySelectorAll('.section').forEach(s => s.classList.remove('active'));
+  document.getElementById(id).classList.add('active');
+}
+
+function updateDots(step) {
+  for (let i = 1; i <= 3; i++) {
+    const d = document.getElementById('dot'+i);
+    d.className = 'step-dot' + (i===step?' active':i<step?' done':'');
+  }
+}
+function setStepLabel(t) { document.getElementById('stepLabel').textContent = t; }
+
+function renderDayPills() {
+  const wrap = document.getElementById('dayPills');
+  wrap.innerHTML = Array.from({length:totalHari},(_,i)=>i+1).map(d => {
+    const hasData = SEMUA_KEGIATAN.some(k => dataIsi[k][d]);
+    const isActive = d === hariAktif;
+    return `<div class="day-pill${isActive?' active':''}${hasData?' has-data':''}" id="pill${d}" onclick="lompat(${d})">${d}</div>`;
+  }).join('');
+  // Scroll pill aktif ke tengah
+  setTimeout(() => {
+    const p = document.getElementById('pill'+hariAktif);
+    if (p) p.scrollIntoView({inline:'center',behavior:'smooth'});
+  }, 50);
+}
+
+function lompat(d) { hariAktif = d; renderDayPills(); renderKegiatan(); updateNav(); }
+
+function pindahHari(arah) {
+  const baru = hariAktif + arah;
+  if (baru < 1 || baru > totalHari) return;
+  hariAktif = baru;
+  renderDayPills();
+  renderKegiatan();
+  updateNav();
+}
+
+function updateNav() {
+  document.getElementById('hariLabel').textContent = 'Hari ke-' + hariAktif;
+  document.getElementById('hariSub').textContent = 'dari ' + totalHari + ' hari';
+  document.getElementById('btnPrev').disabled = hariAktif === 1;
+  document.getElementById('btnNext').disabled = hariAktif === totalHari;
+}
+
+function renderKegiatan() {
+  updateNav();
+  const wrap = document.getElementById('kegiatanList');
+  wrap.innerHTML = KEGIATAN_GRUP.map(g => `
+    <div class="grup-label">${g.grup}</div>
+    <div class="kegiatan-list">
+      ${g.items.map(k => `
+        <div class="kegiatan-row${dataIsi[k][hariAktif]?' checked':''}" onclick="toggleKegiatan('${k.replace(/'/g,"\\'")}')">
+          <div class="check-box"></div>
+          <div class="kegiatan-nama">${NAMA_PENDEK(k)}</div>
+        </div>`).join('')}
+    </div>`).join('');
+}
+
+function toggleKegiatan(k) {
+  dataIsi[k][hariAktif] = !dataIsi[k][hariAktif];
+  renderKegiatan();
+  renderDayPills();
+  updateProgress();
+}
+
+function updateProgress() {
+  const hariAda = Array.from({length:totalHari},(_,i)=>i+1)
+    .filter(d => SEMUA_KEGIATAN.some(k => dataIsi[k][d]));
+  const pct = Math.round(hariAda.length / totalHari * 100);
+  document.getElementById('progTeks').textContent = hariAda.length + ' dari ' + totalHari + ' hari diisi';
+  document.getElementById('progPersen').textContent = pct + '%';
+  document.getElementById('progFill').style.width = pct + '%';
+}
+
+function kirimData() {
+  const bulan = document.getElementById('selBulan').value;
+  const tahun = document.getElementById('selTahun').value;
+  const payload = {
+    nama: selectedSantri.nama,
+    kelas: selectedSantri.kelas,
+    bulan, tahun,
+    gender,
+    data: dataIsi
+  };
+
+  document.getElementById('loadingOverlay').classList.add('show');
+
+  fetch(API_URL, {
+    method: 'POST',
+    body: JSON.stringify(payload)
+  })
+  .then(r => r.json())
+  .then(res => {
+    document.getElementById('loadingOverlay').classList.remove('show');
+    if (res.status === 'ok') {
+      tampilRekap(bulan, tahun);
+    } else {
+      tampilToast('Gagal: ' + res.pesan);
+    }
+  })
+  .catch(() => {
+    document.getElementById('loadingOverlay').classList.remove('show');
+    tampilToast('Koneksi gagal. Coba lagi.');
+  });
+}
+
+function tampilRekap(bulan, tahun) {
+  const total = SEMUA_KEGIATAN.reduce((s,k) =>
+    s + Object.values(dataIsi[k]).filter(Boolean).length, 0);
+  const hariAda = Array.from({length:totalHari},(_,i)=>i+1)
+    .filter(d => SEMUA_KEGIATAN.some(k => dataIsi[k][d])).length;
+
+  const ranked = SEMUA_KEGIATAN.map(k => ({
+    nama: NAMA_PENDEK(k),
+    total: Object.values(dataIsi[k]).filter(Boolean).length
+  })).sort((a,b) => b.total - a.total);
+
+  document.getElementById('rekapTotal').textContent = total;
+  document.getElementById('rekapHari').textContent = hariAda;
+  document.getElementById('rekapTerbaik').textContent = ranked[0]?.total > 0 ? ranked[0].nama : '—';
+  document.getElementById('rekapPerlu').textContent = ranked[ranked.length-1]?.nama || '—';
+  document.getElementById('suksesSub').textContent =
+    `Mutaba'ah ${selectedSantri.nama} — ${bulan} ${tahun} telah masuk ke Google Sheets.`;
+
+  updateDots(3); setStepLabel('Selesai');
+  showSec('sec3');
+}
+
+function reset() {
+  selectedSantri = null;
+  hariAktif = 1;
+  initData();
+  document.getElementById('searchInput').value = '';
+  updateDots(1); setStepLabel('Pilih Santri');
+  showSec('sec1');
+  renderSantri('');
+}
+
+// Init
+initData();
+renderSantri('');
+updateNav();
+</script>
+</body>
+</html>
