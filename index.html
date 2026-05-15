@@ -84,7 +84,7 @@
     color: #1D9E75;
     font-weight: 500;
   }
-  .header-badge::before { content: '🌙'; font-size: 13px; }
+  .header-badge::before { content: none; }
 
   /* CARD UTAMA */
   .card-container {
@@ -160,7 +160,6 @@
     background: var(--hijau-dim);
     box-shadow: inset 0 0 0 1px rgba(29,158,117,0.2);
   }
-  .gender-tab .icon { font-size: 22px; margin-bottom: 4px; }
   .gender-tab .label { font-size: 13px; font-weight: 600; color: var(--teks-sekunder); }
   .gender-tab .count { font-size: 11px; color: var(--teks-muted); margin-top: 2px; }
   .gender-tab.active .label { color: var(--hijau-terang); }
@@ -505,19 +504,17 @@
       <div class="section-hint">Pilih kelompok dan nama santri yang akan diisi mutaba'ahnya.</div>
 
       <div class="gender-tabs">
-        <div class="gender-tab active" id="tabIkhwan" onclick="pilihGender('ikhwan')">
-          <div class="icon">🧑</div>
+        <div class="gender-tab active" id="tabIkhwan" onclick="pilihGender('ikhwan');return false;">
           <div class="label">Ikhwan</div>
           <div class="count">16 santri</div>
         </div>
-        <div class="gender-tab" id="tabAkhwat" onclick="pilihGender('akhwat')">
-          <div class="icon">👩</div>
+        <div class="gender-tab" id="tabAkhwat" onclick="pilihGender('akhwat');return false;">
           <div class="label">Akhwat</div>
           <div class="count">29 santri</div>
         </div>
       </div>
 
-      <input type="text" class="santri-search" placeholder="🔍  Cari nama santri..." oninput="cariSantri(this.value)" id="searchInput">
+      <input type="text" class="santri-search" placeholder="Cari nama santri..." oninput="cariSantri(this.value)" id="searchInput">
 
       <div class="santri-grid" id="santriGrid"></div>
 
@@ -542,7 +539,7 @@
         </div>
       </div>
 
-      <button class="btn btn-primary" onclick="keStep2()">Lanjut isi kegiatan →</button>
+      <button class="btn btn-primary" onclick="keStep2();return false;">Lanjut isi kegiatan →</button>
     </div>
 
     <!-- STEP 2: ISI KEGIATAN -->
@@ -566,26 +563,26 @@
       <div class="day-pills" id="dayPills"></div>
 
       <div class="hari-nav">
-        <button onclick="pindahHari(-1)" id="btnPrev">‹</button>
+        <button onclick="pindahHari(-1);return false;" id="btnPrev">‹</button>
         <div class="hari-info">
           <div class="hari-label" id="hariLabel">Hari ke-1</div>
           <div class="hari-sub" id="hariSub">dari 31 hari</div>
         </div>
-        <button onclick="pindahHari(1)" id="btnNext">›</button>
+        <button onclick="pindahHari(1);return false;" id="btnNext">›</button>
       </div>
 
       <div id="kegiatanList"></div>
 
       <div class="btn-wrap">
-        <button class="btn btn-outline" onclick="keStep1()">← Kembali</button>
-        <button class="btn btn-primary" onclick="kirimData()">✓ Selesai & Simpan ke Spreadsheet</button>
+        <button class="btn btn-outline" onclick="keStep1();return false;">← Kembali</button>
+        <button class="btn btn-primary" onclick="kirimData();return false;">Selesai & Simpan ke Spreadsheet</button>
       </div>
     </div>
 
     <!-- STEP 3: SUKSES -->
     <div class="section" id="sec3">
       <div class="sukses-box">
-        <div class="sukses-icon">✅</div>
+        <div class="sukses-icon">✓</div>
         <div class="sukses-judul">Data Tersimpan!</div>
         <div class="sukses-sub" id="suksesSub">Mutaba'ah berhasil dikirim ke Google Sheets.</div>
 
@@ -608,7 +605,7 @@
           </div>
         </div>
 
-        <button class="btn btn-primary" onclick="reset()">+ Input Santri Lain</button>
+        <button class="btn btn-primary" onclick="reset();return false;">+ Input Santri Lain</button>
       </div>
     </div>
 
@@ -689,7 +686,9 @@ function pilihGender(g) {
   gender = g;
   selectedSantri = null;
   document.getElementById('tabIkhwan').className = 'gender-tab' + (g==='ikhwan'?' active':'');
+  document.getElementById('tabIkhwan').setAttribute('onclick', "pilihGender('ikhwan');return false;");
   document.getElementById('tabAkhwat').className = 'gender-tab' + (g==='akhwat'?' active':'');
+  document.getElementById('tabAkhwat').setAttribute('onclick', "pilihGender('akhwat');return false;");
   document.getElementById('searchInput').value = '';
   renderSantri('');
 }
@@ -703,7 +702,7 @@ function renderSantri(q) {
   grid.innerHTML = filteredList.map((s, i) => {
     const inisial = s.nama.split(' ').map(w=>w[0]).slice(0,2).join('');
     const terpilih = selectedSantri && selectedSantri.nama === s.nama;
-    return `<div class="santri-item${terpilih?' selected':''}" onclick="pilihSantriIdx(${i})">
+    return `<div class="santri-item${terpilih?' selected':''}" onclick="pilihSantriIdx(${i});return false;">
       <div class="santri-avatar">${inisial}</div>
       <div>
         <div class="santri-nama">${s.nama}</div>
@@ -771,19 +770,34 @@ function setStepLabel(t) { document.getElementById('stepLabel').textContent = t;
 
 function renderDayPills() {
   const wrap = document.getElementById('dayPills');
-  wrap.innerHTML = Array.from({length:totalHari},(_,i)=>i+1).map(d => {
+  // Cek apakah pill sudah ada (inisialisasi pertama atau ganti bulan)
+  if (wrap.children.length !== totalHari) {
+    wrap.innerHTML = Array.from({length:totalHari},(_,i)=>i+1).map(d => {
+      return `<div class="day-pill" id="pill${d}" onclick="lompat(${d}, event)">${d}</div>`;
+    }).join('');
+  }
+  // Update class tanpa rebuild DOM
+  Array.from({length:totalHari},(_,i)=>i+1).forEach(d => {
+    const el = document.getElementById('pill'+d);
+    if (!el) return;
     const hasData = SEMUA_KEGIATAN.some(k => dataIsi[k][d]);
     const isActive = d === hariAktif;
-    return `<div class="day-pill${isActive?' active':''}${hasData?' has-data':''}" id="pill${d}" onclick="lompat(${d})">${d}</div>`;
-  }).join('');
-  // Scroll pill aktif ke tengah
+    el.className = 'day-pill' + (isActive?' active':'') + (hasData?' has-data':'');
+  });
+  // Scroll pill aktif ke tengah (horizontal only, no window scroll)
   setTimeout(() => {
     const p = document.getElementById('pill'+hariAktif);
-    if (p) p.scrollIntoView({inline:'center',behavior:'smooth'});
+    const wrap = document.getElementById('dayPills');
+    if (p && wrap) {
+      const pillLeft = p.offsetLeft;
+      const pillWidth = p.offsetWidth;
+      const wrapWidth = wrap.offsetWidth;
+      wrap.scrollLeft = pillLeft - (wrapWidth / 2) + (pillWidth / 2);
+    }
   }, 50);
 }
 
-function lompat(d) { hariAktif = d; renderDayPills(); renderKegiatan(); updateNav(); }
+function lompat(d, e) { if(e){e.preventDefault();e.stopPropagation();} hariAktif = d; renderDayPills(); renderKegiatan(); updateNav(); }
 
 function pindahHari(arah) {
   const baru = hariAktif + arah;
@@ -801,6 +815,10 @@ function updateNav() {
   document.getElementById('btnNext').disabled = hariAktif === totalHari;
 }
 
+function kegiatanId(k) {
+  return 'keg_' + k.replace(/[^a-zA-Z0-9]/g, '_');
+}
+
 function renderKegiatan() {
   updateNav();
   const wrap = document.getElementById('kegiatanList');
@@ -808,7 +826,7 @@ function renderKegiatan() {
     <div class="grup-label">${g.grup}</div>
     <div class="kegiatan-list">
       ${g.items.map(k => `
-        <div class="kegiatan-row${dataIsi[k][hariAktif]?' checked':''}" onclick="toggleKegiatan('${k.replace(/'/g,"\\'")}')">
+        <div class="kegiatan-row${dataIsi[k][hariAktif]?' checked':''}" id="${kegiatanId(k)}" data-key="${k.replace(/"/g,'&quot;')}">
           <div class="check-box"></div>
           <div class="kegiatan-nama">${NAMA_PENDEK(k)}</div>
         </div>`).join('')}
@@ -817,7 +835,8 @@ function renderKegiatan() {
 
 function toggleKegiatan(k) {
   dataIsi[k][hariAktif] = !dataIsi[k][hariAktif];
-  renderKegiatan();
+  const el = document.getElementById(kegiatanId(k));
+  if (el) el.classList.toggle('checked', dataIsi[k][hariAktif]);
   renderDayPills();
   updateProgress();
 }
@@ -899,6 +918,14 @@ function reset() {
 initData();
 renderSantri('');
 updateNav();
+
+// Event delegation untuk kegiatanList - cegah scroll window
+document.getElementById('kegiatanList').addEventListener('click', function(e) {
+  e.preventDefault();
+  e.stopPropagation();
+  const row = e.target.closest('[data-key]');
+  if (row) toggleKegiatan(row.dataset.key);
+}, { passive: false });
 </script>
 </body>
 </html>
